@@ -1,2 +1,12 @@
-curVer: V0.0.1
-updateDate: 2022/11/02
+curVer: V0.0.2
+updateDate: 2022/11/03
+dsc:
+  - 调整 '#备忘->memo'
+  - 停用 转发消息
+  - 新增 memo*、分数
+  - 修复 at吞转发消息和回车键bug
+pre:
+  - ver: V0.0.1
+  - updateDate: 2022/11/02
+  - dsc:
+      - initial

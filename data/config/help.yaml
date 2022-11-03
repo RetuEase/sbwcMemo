@@ -8,3 +8,7 @@ contents:
     dsc: '查看当前备忘录'
   - app: 'mem-(备忘录序号)'
     dsc: '删除指定备忘录序号的备忘'
+  - app: 'mem*(备忘录序号)'
+    dsc: '标记制定备忘录序号的备忘为已完成'
+  - app: 'memclearscore'
+    dsc: '分数清零'

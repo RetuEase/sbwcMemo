@@ -19,11 +19,14 @@ export class _ParentClass extends plugin {
     return Bot.makeForwardMsg(fMsg);
   }
 
-  async formatMemo(userName, simpleMemoArr, page = false) {
+  async formatMemo(userName, simpleMemoArr, propertyObj, page = false) {
     let actualPage; // 实际展示的页数，全部展示则为undefined
 
     simpleMemoArr = simpleMemoArr.map(
-      (memoObj, index) => `[${index + 1}]: ${memoObj.memoValue}`
+      (memoObj, index) =>
+        `[${index + 1}]: ${memoObj.memoValue}${
+          memoObj.score ? ` ${memoObj.score}分` : ''
+        }`
     );
 
     // 有page且大于0就不全部展示了
@@ -43,7 +46,9 @@ export class _ParentClass extends plugin {
     const padEnd = 24 - getStrLen(title);
     const formatTitle = title.padEnd(title.length + padEnd, '-');
 
-    return [formatTitle, ...simpleMemoArr].join('\n');
+    const score = `分数: ${propertyObj.score || 0}`;
+
+    return [formatTitle, '', score, '', ...simpleMemoArr].join('\n');
   }
 
   /**

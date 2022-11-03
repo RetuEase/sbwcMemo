@@ -29,9 +29,13 @@ export class DefaultMemo extends _ParentClass {
     const userName = e.sender.card;
 
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
+    const propertyObj = readYamlSync(userId, 'property') || {};
 
-    const replyMsg = await this.formatMemo(userName, simpleMemoArr);
-    console.log(replyMsg);
+    const replyMsg = await this.formatMemo(
+      userName,
+      simpleMemoArr,
+      propertyObj
+    );
 
     await this.reply(e, replyMsg, true);
   }

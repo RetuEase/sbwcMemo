@@ -29,16 +29,27 @@ export class AddMemo extends _ParentClass {
     const userName = e.sender.card;
     const userMsg = e.msg;
 
-    const memoValue = userMsg.replace(/^mem *\+/, '').trim();
-    if (!memoValue)
+    const memoValues = userMsg.replace(/^mem *\+/, '').trim();
+    if (!memoValues)
       return await this.reply(e, `${userName} 添加空气 成功！`, true);
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
 
-    memoValue.split(/[\r\n]/).forEach(memoValue => {
-      if (memoValue) simpleMemoArr.push({ memoValue });
+    memoValues.split(/[\r\n]/).forEach(memoValue => {
+      if (memoValue) {
+        // 从第二个参数开始，找到一个可转化为数字的参数设置为score，然后把这个参数删掉
+        const score =
+          memoValue
+            .split(' ')
+            .slice(1)
+            .find(param => Number(param)) || false;
+        if (score) memoValue = memoValue.replace(score, '').trim();
+
+        simpleMemoArr.push({ memoValue, score });
+      }
     });
+
     writeYamlSync(userId, 'simple', simpleMemoArr);
 
-    await this.reply(e, `${userName} 添加 ${memoValue} 成功！`, true);
+    await this.reply(e, `${userName} 添加 ${memoValues} 成功！`, true);
   }
 }

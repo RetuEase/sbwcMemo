@@ -17,7 +17,7 @@ export class SimpleMemo extends _ParentClass {
       rule: [
         {
           reg: '^mem *help',
-          fnc: 'memoHelpSimple',
+          fnc: 'memoHelp',
         },
         {
           reg: '^mem *=(.*)',
@@ -32,7 +32,7 @@ export class SimpleMemo extends _ParentClass {
   }
 
   /** 备忘帮助 */
-  async memoHelpSimple(e) {
+  async memoHelp(e) {
     const { title, contents } = readYamlSync('config', 'help');
     const curVer = readYamlSync('config', 'version').curVer;
 
@@ -52,8 +52,14 @@ export class SimpleMemo extends _ParentClass {
 
     const page = Number(userMsg.replace(/^mem *=/, '').trim());
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
+    const propertyObj = readYamlSync(userId, 'property') || {};
 
-    const replyMsg = await this.formatMemo(userName, simpleMemoArr, page);
+    const replyMsg = await this.formatMemo(
+      userName,
+      simpleMemoArr,
+      propertyObj,
+      page
+    );
 
     await this.reply(e, replyMsg, true);
   }
@@ -75,6 +81,7 @@ export class SimpleMemo extends _ParentClass {
       );
 
     simpleMemoArr.splice(delMemoId - 1, 1);
+
     writeYamlSync(userId, 'simple', simpleMemoArr);
 
     await this.reply(e, `${userName} 删除第${delMemoId}条备忘 成功！`, true);
