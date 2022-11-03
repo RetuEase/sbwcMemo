@@ -1,5 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { segment } from 'oicq';
+import { getStrLen } from '../../models/misc.js';
 
 export class _ParentClass extends plugin {
   constructor(defineObj) {
@@ -16,6 +17,33 @@ export class _ParentClass extends plugin {
       return { message: m, nickname: Bot.nickname, user_id: Bot.uin };
     });
     return Bot.makeForwardMsg(fMsg);
+  }
+
+  async formatMemo(userName, simpleMemoArr, page = false) {
+    let actualPage; // 实际展示的页数，全部展示则为undefined
+
+    simpleMemoArr = simpleMemoArr.map(
+      (memoObj, index) => `[${index + 1}]: ${memoObj.memoValue}`
+    );
+
+    // 有page且大于0就不全部展示了
+    if (page && page > 0) {
+      if (page * 10 < simpleMemoArr.length) {
+        actualPage = page;
+        simpleMemoArr = simpleMemoArr.slice((page - 1) * 10, page * 10);
+      } else {
+        actualPage = Math.trunc(simpleMemoArr.length / 10) + 1;
+        simpleMemoArr = simpleMemoArr.slice((page - 1) * 10);
+      }
+    }
+
+    const title = `--${userName}の备忘录${
+      actualPage ? `[PAGE ${actualPage}]` : ''
+    }`;
+    const padEnd = 24 - getStrLen(title);
+    const formatTitle = title.padEnd(title.length + padEnd, '-');
+
+    return [formatTitle, ...simpleMemoArr].join('\n');
   }
 
   /**
