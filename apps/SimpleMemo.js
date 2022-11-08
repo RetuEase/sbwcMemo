@@ -2,7 +2,7 @@ import { _ParentClass } from './_ParentClass/_ParentClass.js';
 import { readYamlSync, writeYamlSync } from '../models/rwYamlSync.js';
 
 /**
- * 备忘录帮助、查看、添加与删除
+ * 备忘录帮助、添加、查看与删除
  */
 
 const SIMPLE_MEMO_PRIOR = 200;
@@ -11,7 +11,7 @@ export class SimpleMemo extends _ParentClass {
   constructor() {
     super({
       name: 'SimpleMemo',
-      dsc: '备忘录帮助、查看添加与删除',
+      dsc: '备忘录帮助、添加、查看与删除',
       event: 'message',
       priority: SIMPLE_MEMO_PRIOR,
       rule: [

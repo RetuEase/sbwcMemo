@@ -4,7 +4,7 @@ import { execArr } from './MemoListener.js';
 import { delFile } from '../models/fileSystem.js';
 
 /**
- * 简单的备忘录创建
+ * 资源库添加、查看与删除
  */
 
 const ASSET_MEMO_PRIOR = 200;
@@ -13,7 +13,7 @@ export class AssetMemo extends _ParentClass {
   constructor() {
     super({
       name: 'AssetMemo',
-      dsc: '简单的备忘录创建',
+      dsc: '资源库添加、查看与删除',
       event: 'message',
       priority: ASSET_MEMO_PRIOR,
       rule: [

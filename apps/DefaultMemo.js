@@ -2,7 +2,7 @@ import { _ParentClass } from './_ParentClass/_ParentClass.js';
 import { readYamlSync } from '../models/rwYamlSync.js';
 
 /**
- * 简单的备忘录帮助、创建、查看与删除
+ * 参数缺省时的默认函数
  */
 
 const DEFAULT_MEMO_PRIOR = 500;

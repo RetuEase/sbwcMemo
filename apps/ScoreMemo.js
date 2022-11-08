@@ -3,7 +3,7 @@ import { readYamlSync, writeYamlSync } from '../models/rwYamlSync.js';
 import { verifyArr } from './MemoListener.js';
 
 /**
- * 简单备忘的完成与分数操作
+ * 备忘的完成与分数操作
  */
 
 const SCORE_MEMO_PRIOR = 200;
@@ -12,7 +12,7 @@ export class ScoreMemo extends _ParentClass {
   constructor() {
     super({
       name: 'ScoreMemo',
-      dsc: '简单备忘的完成与分数操作',
+      dsc: '备忘的完成与分数操作',
       event: 'message',
       priority: SCORE_MEMO_PRIOR,
       rule: [
