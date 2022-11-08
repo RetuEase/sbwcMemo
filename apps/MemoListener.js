@@ -1,7 +1,5 @@
 import { _ParentClass } from './_ParentClass/_ParentClass.js';
 import * as Exe from '../models/execute.js';
-import images from 'images';
-import { segment } from 'oicq';
 
 /**
  * 监听
