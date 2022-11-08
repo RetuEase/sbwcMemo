@@ -37,7 +37,6 @@ export class MemoListener extends _ParentClass {
     //   e,
     //   segment.image('./plugins/sbwcMemo/data/1099177812/images/1.jpg')
     // );
-    console.log(e);
     // 确认，userId,fnc,name
     if (verifyArr.length > 0) return await this.verify(e);
     // 执行，userId,fnc,...
