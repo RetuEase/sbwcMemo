@@ -1,12 +1,17 @@
-curVer: V0.0.2
-updateDate: 2022/11/03
+curVer: V0.0.3
+updateDate: 2022/11/08
 dsc:
-  - 调整 '#备忘->memo'
-  - 停用 转发消息
-  - 新增 memo*、分数
-  - 修复 at吞转发消息和回车键bug
+  - 新增 mem*=（查看已完成列表）功能
+  - 新增 mass（资源库）功能
 pre:
   - ver: V0.0.1
-  - updateDate: 2022/11/02
-  - dsc:
+    updateDate: 2022/11/02
+    dsc:
       - initial
+  - ver: V0.0.2
+    updateDate: 2022/11/03
+    dsc:
+      - 调整 '#备忘->mem'
+      - 停用 转发消息
+      - 新增 mem*、分数
+      - 修复 at吞转发消息和回车键bug

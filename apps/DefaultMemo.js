@@ -16,14 +16,22 @@ export class DefaultMemo extends _ParentClass {
       priority: DEFAULT_MEMO_PRIOR,
       rule: [
         {
-          reg: '^mem *',
+          reg: '^mem *$',
           fnc: 'memo',
+        },
+        {
+          reg: '^m(em)?ass *$',
+          fnc: 'memoAsset',
+        },
+        {
+          reg: '^m[(em)|(ass)]*',
+          fnc: 'memoX',
         },
       ],
     });
   }
 
-  /** 缺省：查看当前备忘录 */
+  /** 缺省：快速查看备忘录 */
   async memo(e) {
     const userId = e.user_id;
     const userName = e.sender.card;
@@ -31,12 +39,24 @@ export class DefaultMemo extends _ParentClass {
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
     const propertyObj = readYamlSync(userId, 'property') || {};
 
-    const replyMsg = await this.formatMemo(
-      userName,
-      simpleMemoArr,
-      propertyObj
-    );
+    const replyMsg = this.formatMemo(userName, simpleMemoArr, propertyObj);
 
     await this.reply(e, replyMsg, true);
+  }
+
+  /** 缺省：快速查看资源库 */
+  async memoAsset(e) {
+    const userId = e.user_id;
+
+    const assetArr = readYamlSync(userId, 'asset') || [];
+
+    const replyMsg = await this.formatAssets(e, assetArr);
+
+    await this.reply(e, replyMsg);
+  }
+
+  /** 输入错误：发送提示 */
+  async memoX(e) {
+    await this.reply(e, '发送memhelp可查看帮助——sbwcMemo', true);
   }
 }

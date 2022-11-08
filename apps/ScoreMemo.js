@@ -17,8 +17,12 @@ export class ScoreMemo extends _ParentClass {
       priority: SCORE_MEMO_PRIOR,
       rule: [
         {
-          reg: `^mem *${'\\'}*(.*)`,
+          reg: `^mem *${'\\'}*(?!=)`,
           fnc: 'memoFinishSimple',
+        },
+        {
+          reg: `^mem *${'\\'}*=(.*)`,
+          fnc: 'memoSeeFinished',
         },
         {
           reg: '^mem *clear *score',
@@ -70,6 +74,20 @@ export class ScoreMemo extends _ParentClass {
       }`,
       true
     );
+  }
+
+  /** 查看已完成列表 */
+  async memoSeeFinished(e) {
+    const userId = e.user_id;
+    const userName = e.sender.card;
+    const userMsg = e.msg;
+
+    const page = Number(userMsg.replace(/^mem *\*=/, '').trim());
+    const finishedMemoArr = readYamlSync(userId, 'finished') || [];
+
+    const replyMsg = this.formatFinished(userName, finishedMemoArr, page);
+
+    await this.reply(e, replyMsg, true);
   }
 
   /** 清空分数询问 */

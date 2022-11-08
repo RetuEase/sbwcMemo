@@ -2,7 +2,7 @@ import { _ParentClass } from './_ParentClass/_ParentClass.js';
 import { readYamlSync, writeYamlSync } from '../models/rwYamlSync.js';
 
 /**
- * 简单的备忘录帮助、查看与删除
+ * 备忘录帮助、查看、添加与删除
  */
 
 const SIMPLE_MEMO_PRIOR = 200;
@@ -11,13 +11,17 @@ export class SimpleMemo extends _ParentClass {
   constructor() {
     super({
       name: 'SimpleMemo',
-      dsc: '简单的备忘录帮助、查看与删除',
+      dsc: '备忘录帮助、查看添加与删除',
       event: 'message',
       priority: SIMPLE_MEMO_PRIOR,
       rule: [
         {
           reg: '^mem *help',
           fnc: 'memoHelp',
+        },
+        {
+          reg: `^mem *${'\\'}+(.*)`,
+          fnc: 'memoAddSimple',
         },
         {
           reg: '^mem *=(.*)',
@@ -44,6 +48,36 @@ export class SimpleMemo extends _ParentClass {
     return;
   }
 
+  /** 添加备忘 */
+  async memoAddSimple(e) {
+    const userId = e.user_id;
+    const userName = e.sender.card;
+    const userMsg = e.msg;
+
+    const memoValues = userMsg.replace(/^mem *\+/, '').trim();
+    if (!memoValues)
+      return await this.reply(e, `${userName} 添加空气 成功！`, true);
+    const simpleMemoArr = readYamlSync(userId, 'simple') || [];
+
+    memoValues.split(/[\r\n]/).forEach(memoValue => {
+      if (memoValue) {
+        // 从第二个参数开始，找到一个可转化为数字的参数设置为score，然后把这个参数删掉
+        const score =
+          memoValue
+            .split(' ')
+            .slice(1)
+            .find(param => Number(param)) || false;
+        if (score) memoValue = memoValue.replace(score, '').trim();
+
+        simpleMemoArr.push({ memoValue, score });
+      }
+    });
+
+    writeYamlSync(userId, 'simple', simpleMemoArr);
+
+    await this.reply(e, `${userName} 添加 ${memoValues} 成功！`, true);
+  }
+
   /** 查看当前备忘录 */
   async memoSeeSimple(e) {
     const userId = e.user_id;
@@ -54,7 +88,7 @@ export class SimpleMemo extends _ParentClass {
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
     const propertyObj = readYamlSync(userId, 'property') || {};
 
-    const replyMsg = await this.formatMemo(
+    const replyMsg = this.formatMemo(
       userName,
       simpleMemoArr,
       propertyObj,
@@ -75,9 +109,7 @@ export class SimpleMemo extends _ParentClass {
     if (!delMemoId || delMemoId <= 0 || delMemoId > simpleMemoArr.length)
       return await this.reply(
         e,
-        `${userName} 试图删除不存在的 第${
-          delMemoId || '啥都不是'
-        }条备忘 时失败了！`
+        `${userName} 试图删除不存在的 第${delMemoId || '?'}条备忘 时失败了！`
       );
 
     simpleMemoArr.splice(delMemoId - 1, 1);
