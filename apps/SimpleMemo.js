@@ -104,18 +104,35 @@ export class SimpleMemo extends _ParentClass {
     const userName = e.sender.card;
     const userMsg = e.msg;
 
-    const delMemoId = Number(userMsg.replace(/^mem *-/, '').trim());
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
-    if (!delMemoId || delMemoId <= 0 || delMemoId > simpleMemoArr.length)
-      return await this.reply(
-        e,
-        `${userName} 试图删除不存在的 第${delMemoId || '?'}条备忘 时失败了！`
-      );
+    userMsg
+      .replace(/^mem *-/, '')
+      .trim()
+      .split(' ')
+      .forEach(delMemoId => {
+        delMemoId = Number(delMemoId);
+        if (!delMemoId || delMemoId <= 0 || delMemoId > simpleMemoArr.length)
+          return this.reply(
+            e,
+            `${userName} 试图删除不存在的 第${
+              delMemoId || '?'
+            }条备忘 时失败了！`
+          );
 
-    simpleMemoArr.splice(delMemoId - 1, 1);
+        const delMemo = simpleMemoArr[delMemoId - 1];
+        delete simpleMemoArr[delMemoId - 1];
 
-    writeYamlSync(userId, 'simple', simpleMemoArr);
+        this.reply(
+          e,
+          `${userName} 删除第${delMemoId}条备忘：${delMemo.memoValue} 成功！`,
+          true
+        );
+      });
 
-    await this.reply(e, `${userName} 删除第${delMemoId}条备忘 成功！`, true);
+    writeYamlSync(
+      userId,
+      'simple',
+      simpleMemoArr.filter(simpleMemo => simpleMemo)
+    );
   }
 }

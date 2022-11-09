@@ -68,10 +68,9 @@ export class MemoListener extends _ParentClass {
   async execute(e) {
     const userId = e.user_id;
 
-    const index = execArr.findIndex(exec => exec.userId === userId);
-    if (index < 0) return false;
+    const exec = execArr.find(exec => exec.userId === userId);
+    if (!exec) return false;
 
-    const exec = execArr.splice(index, 1)[0];
     const replyMsg = await Exe[exec.fnc](e, exec);
     await this.reply(e, replyMsg, true);
   }

@@ -44,7 +44,6 @@ export const addAsset = async function (e, exec) {
     if (e.isPrivate) url = await e.friend.getFileUrl(userMsg.fid);
     if (e.isGroup) url = await e.group.getFileUrl(userMsg.fid);
     if (!url) return `${userName} 读不到你发的文件，我们加了好友吗qaq`;
-    console.log(url);
 
     const name = await addUniqueFile(url, userId, 'files', userMsg.name);
     if (!name) return `${userName} 发送的文件下载失败了qaq`;

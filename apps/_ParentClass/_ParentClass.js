@@ -130,7 +130,6 @@ export class _ParentClass extends __Base {
     const formatTitle = title.padEnd(title.length + padEnd, '-');
     await this.reply(e, formatTitle, true);
 
-    console.log(assetArr);
     return await this.makeForwardMsg(assetArr);
   }
 
@@ -148,11 +147,15 @@ export class _ParentClass extends __Base {
     }
     if (assetObj.type === 'file') {
       const path = getFilePath(userId, 'files');
-      await e.friend.sendFile(`${path}/${assetObj.name}`).catch(err => {
+      let friend = e.friend;
+      if (e.isGroup) friend = Bot.pickFriend(+userId);
+      if (!friend) return '请先添加好友';
+
+      await friend.sendFile(`${path}/${assetObj.name}`).catch(err => {
         logger.error(`${this.e.logFnc} 发送文件失败 ${JSON.stringify(err)}`);
         return `${this.e.logFnc} 发送文件失败 ${JSON.stringify(err)}`;
       });
-      return '文件已发送';
+      return `文件已发送${e.isGroup ? '，请查看私聊' : ''}`;
     }
     if (assetObj.type === 'json') return segment.json(assetObj.data);
 

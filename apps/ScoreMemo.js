@@ -38,42 +38,55 @@ export class ScoreMemo extends _ParentClass {
     const userName = e.sender.card;
     const userMsg = e.msg;
 
-    // 删备忘
-    const finishMemoId = Number(userMsg.replace(/^mem *\*/, '').trim());
     const simpleMemoArr = readYamlSync(userId, 'simple') || [];
-    if (
-      !finishMemoId ||
-      finishMemoId <= 0 ||
-      finishMemoId > simpleMemoArr.length
-    )
-      return await this.reply(
-        e,
-        `${userName} 试图标记不存在的 第${
-          finishMemoId || '啥都不是'
-        }条备忘 为已完成时失败了！`
-      );
-
-    const finishedMemo = simpleMemoArr.splice(finishMemoId - 1, 1)[0];
-    writeYamlSync(userId, 'simple', simpleMemoArr);
-
-    // 进完成
     const finishedMemoArr = readYamlSync(userId, 'finished') || [];
-    finishedMemoArr.push(finishedMemo);
-    writeYamlSync(userId, 'finished', finishedMemoArr);
-
-    // 加分
     const propertyObj = readYamlSync(userId, 'property') || {};
-    propertyObj.score ||= 0;
-    if (finishedMemo.score) propertyObj.score += +finishedMemo.score;
-    writeYamlSync(userId, 'property', propertyObj);
+    userMsg
+      .replace(/^mem *\*/, '')
+      .trim()
+      .split(' ')
+      .forEach(finishMemoId => {
+        finishMemoId = Number(finishMemoId);
+        if (
+          !finishMemoId ||
+          finishMemoId <= 0 ||
+          finishMemoId > simpleMemoArr.length
+        )
+          return this.reply(
+            e,
+            `${userName} 试图标记不存在的 第${
+              finishMemoId || '啥都不是'
+            }条备忘 为已完成时失败了！`
+          );
 
-    await this.reply(
-      e,
-      `${userName} 已标记第${finishMemoId}条备忘 为已完成！${
-        finishedMemo.score ? `获得${finishedMemo.score}分` : ''
-      }`,
-      true
+        // 删备忘
+        const finishedMemo = simpleMemoArr[finishMemoId - 1];
+        delete simpleMemoArr[finishMemoId - 1];
+
+        // 进完成
+        finishedMemoArr.push(finishedMemo);
+
+        // 加分
+        propertyObj.score ||= 0;
+        if (finishedMemo.score) propertyObj.score += +finishedMemo.score;
+
+        this.reply(
+          e,
+          `${userName} 已标记第${finishMemoId}条备忘：${
+            finishedMemo.memoValue
+          } 为已完成！${
+            finishedMemo.score ? `获得${finishedMemo.score}分` : ''
+          }`,
+          true
+        );
+      });
+    writeYamlSync(
+      userId,
+      'simple',
+      simpleMemoArr.filter(simpleMemo => simpleMemo)
     );
+    writeYamlSync(userId, 'finished', finishedMemoArr);
+    writeYamlSync(userId, 'property', propertyObj);
   }
 
   /** 查看已完成列表 */
