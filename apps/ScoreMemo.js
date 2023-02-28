@@ -120,9 +120,9 @@ export class ScoreMemo extends _ParentClass {
     const chgScrMsg = e.msg.replace(/^ms/, '').trim();
 
     const symb = chgScrMsg[0];
-    if (!'+-'.includes(symb)) return this.reply(`符号错误（${symb}）`);
+    if (!'+-'.includes(symb)) return this.reply(e, `符号错误（${symb}）`);
     const count = chgScrMsg.slice(1).trim();
-    if (isNaN(Number(count))) return this.reply(`输入非数字（${count}）`);
+    if (isNaN(Number(count))) return this.reply(e, `输入非数字（${count}）`);
 
     const change = symb === '+' ? Number(count) : -Number(count);
     const property = readYamlSync(e.user_id, 'property') || {};
