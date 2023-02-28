@@ -18,7 +18,7 @@ export class AssetMemo extends _ParentClass {
       priority: ASSET_MEMO_PRIOR,
       rule: [
         {
-          reg: `^m(em)?ass *${'\\'}+(.*)`,
+          reg: `^m(em)?ass *\\+(.*)`,
           fnc: 'memoAddAssetStart',
         },
         {

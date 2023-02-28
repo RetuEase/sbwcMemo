@@ -62,9 +62,9 @@ export class _ParentClass extends __Base {
         finishedArr = finishedArr.slice((actualPage - 1) * 10);
       }
     } else if (finishedArr.length > 50)
-      finishedArr = `...未展示的${finishedArr.length - 50}条已完成备忘`.concat(
-        finishedArr.slice(-50)
-      );
+      finishedArr = [
+        `...未展示的${finishedArr.length - 50}条已完成备忘`,
+      ].concat(finishedArr.slice(-50));
 
     const title = `-${userName}の已完成列表${
       actualPage ? `[PAGE ${actualPage}]` : ''
