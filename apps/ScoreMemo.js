@@ -117,10 +117,11 @@ export class ScoreMemo extends _ParentClass {
 
   /** 直接改动分数 */
   async memoChangeScore(e) {
-    const chgScrMsg = e.msg.replace(/^ms/, '').trim().split(' ');
+    const chgScrMsg = e.msg.replace(/^ms/, '').trim();
 
-    const [symb, count] = chgScrMsg.map(msg => msg.trim()).filter(msg => msg);
+    const symb = chgScrMsg[0];
     if (!'+-'.includes(symb)) return this.reply(`符号错误（${symb}）`);
+    const count = chgScrMsg.slice(1).trim();
     if (isNaN(Number(count))) return this.reply(`输入非数字（${count}）`);
 
     const change = symb === '+' ? Number(count) : -Number(count);
@@ -129,6 +130,6 @@ export class ScoreMemo extends _ParentClass {
     property.score += change;
 
     writeYamlSync(e.user_id, 'property', property);
-    return this.reply(`成功${symb === '+' ? '加' : '减'}分${count}`);
+    return this.reply(e, `成功${symb === '+' ? '加' : '减'}分${count}`);
   }
 }
