@@ -30,7 +30,7 @@ export class AssetMemo extends _ParentClass {
           fnc: 'memoSeeAsset',
         },
         {
-          reg: `^m(em)?ass *pic(.*)`,
+          reg: `^mpic(.*)`,
           fnc: 'memoGetAsset',
         },
         {
@@ -85,7 +85,8 @@ export class AssetMemo extends _ParentClass {
     const userName = e.sender.card;
     const userMsg = e.msg;
 
-    const getAssetId = Number(userMsg.replace(/^m(em)?ass *pic/, '').trim());
+    // const getAssetId = Number(userMsg.replace(/^m(em)?ass *pic/, '').trim());
+    const getAssetId = Number(userMsg.replace(/^mpic/, '').trim());
     const assetArr = readYamlSync(userId, 'asset') || [];
     if (!getAssetId || getAssetId <= 0 || getAssetId > assetArr.length)
       return await this.reply(
